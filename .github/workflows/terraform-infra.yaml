@@ -1,0 +1,52 @@
+name: Terraform Infrastructure Pipeline
+
+on:
+  push:
+    paths:
+      - 'terraform/**'  # Trigger only on changes within the terraform directory
+
+env:
+  ACR_NAME: myacrregistry12345
+  ACR_LOGIN_SERVER: myacrregistry12345.azurecr.io
+  IMAGE_NAME: html-app
+  AKS_RESOURCE_GROUP: aks-resource-group
+  AKS_CLUSTER_NAME: my-aks-cluster
+  NAMESPACE: default
+
+jobs:
+  provision-infra:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.4.6  # You can specify the desired Terraform version here
+
+    - name: Initialize Terraform
+      working-directory: terraform
+      run: terraform init
+
+    - name: Validate Terraform
+      working-directory: terraform
+      run: terraform validate
+
+    - name: Plan Terraform
+      working-directory: terraform
+      run: terraform plan -out=tfplan
+
+    - name: Apply Terraform
+      working-directory: terraform
+      run: terraform apply -auto-approve tfplan
+      env:
+        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
