@@ -17,7 +17,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    needs: provision-infra  # Ensure this runs after the terraform-infra pipeline
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
