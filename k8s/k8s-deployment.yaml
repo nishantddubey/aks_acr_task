@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: html-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: html-app
+  template:
+    metadata:
+      labels:
+        app: html-app
+    spec:
+      containers:
+      - name: html-app
+        image: myacrregistry12345.azurecr.io/html-app:latest # This will be dynamically updated in the pipeline
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
