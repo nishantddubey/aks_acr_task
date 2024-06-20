@@ -40,12 +40,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin = "azure"
     network_policy = "azure"
   }
-
 }
 
-# AKS Credentials to Access ACR
-resource "azurerm_role_assignment" "acr_pull" {
-  principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-  role_definition_name = "AcrPull"
+# AKS Role Assignment to Access ACR
+resource "azurerm_kubernetes_cluster_role_assignment" "acr_pull" {
   scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  role_definition_id   = data.azurerm_role_definition.acr_pull.id
+  principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+}
+
+# Data source to fetch built-in ACR role definition
+data "azurerm_role_definition" "acr_pull" {
+  name = "AcrPull"
 }
