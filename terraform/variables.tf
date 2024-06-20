@@ -5,7 +5,7 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  default = "aks-acr-resource-group"
+  default = "aks-resource-group"
 }
 
 variable "acr_name" {

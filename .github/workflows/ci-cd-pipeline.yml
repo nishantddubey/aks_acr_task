@@ -9,7 +9,7 @@ env:
   ACR_NAME: myacrregistry12345
   ACR_LOGIN_SERVER: myacrregistry12345.azurecr.io
   IMAGE_NAME: html-app
-  AKS_RESOURCE_GROUP: aks-acr-resource-group
+  AKS_RESOURCE_GROUP: aks-resource-group
   AKS_CLUSTER_NAME: my-aks-cluster
   NAMESPACE: default
 
